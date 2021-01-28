@@ -17,6 +17,9 @@ type AccordionCollapse = BsPrefixRefForwardingComponent<
 >;
 
 const propTypes = {
+  /** Set a custom element for this component */
+  as: PropTypes.elementType,
+
   /**
    * A key that corresponds to the toggler that triggers this collapse's expand or collapse.
    */
@@ -27,7 +30,12 @@ const propTypes = {
 };
 
 const AccordionCollapse: AccordionCollapse = React.forwardRef<typeof Collapse>(
-  ({ children, eventKey, ...props }: AccordionCollapseProps, ref) => {
+  ({
+    children,
+    eventKey,
+    ...props
+  }: AccordionCollapseProps, ref) => {
+    const { as: Component = 'div'} = props;
     const contextEventKey = useContext(AccordionContext);
 
     // Empty SelectableContext is to prevent elements in the collapse
@@ -35,7 +43,7 @@ const AccordionCollapse: AccordionCollapse = React.forwardRef<typeof Collapse>(
     return (
       <SelectableContext.Provider value={null}>
         <Collapse ref={ref} in={contextEventKey === eventKey} {...props}>
-          <div>{React.Children.only(children)}</div>
+          <Component>{React.Children.only(children)}</Component>
         </Collapse>
       </SelectableContext.Provider>
     );
